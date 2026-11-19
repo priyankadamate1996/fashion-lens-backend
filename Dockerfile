@@ -11,5 +11,5 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /work
 COPY --from=build /workspace/target/quarkus-app/ ./
-EXPOSE 10000
+EXPOSE 8080
 CMD ["java", "-Dquarkus.http.host=0.0.0.0", "-jar", "quarkus-run.jar"]
