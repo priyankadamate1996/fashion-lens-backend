@@ -19,6 +19,7 @@ The API starts at `http://localhost:8080`. OpenAPI is available at
 `http://localhost:8080/q/openapi` and Swagger UI at
 `http://localhost:8080/q/swagger-ui` while running in dev mode.
 
+<<<<<<< HEAD
 ## Deploy backend to Render
 
 The repository includes a `Dockerfile` and `render.yaml` for deploying this
@@ -32,6 +33,8 @@ After deployment, set `EXPO_PUBLIC_API_BASE_URL` in the frontend's
 and deploy the frontend to Firebase Hosting. The backend's CORS allowlist is
 configured by `FASHION_LENS_CORS_ORIGINS` for the Firebase Hosting origin.
 
+=======
+>>>>>>> 8a0d59a26a72f81696f0435bde37c96432e94416
 Without provider credentials, the API returns clearly labelled sample products.
 To enable SerpApi search for local development, create `.env` in this directory
 using `.env.example` as a template, then replace the placeholder with your key:

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .git
 .github
 .vscode
@@ -6,3 +7,10 @@ target
 .env
 .env.*
 !.env.example
+=======
+*
+!target/*-runner
+!target/*-runner.jar
+!target/lib/*
+!target/quarkus-app/*
+>>>>>>> 8a0d59a26a72f81696f0435bde37c96432e94416
