@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: fashion-lens-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: SERPAPI_KEY
+        sync: false
+      - key: FASHION_LENS_CORS_ORIGINS
+        value: https://fashionlens-da167.web.app
