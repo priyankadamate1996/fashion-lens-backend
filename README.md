@@ -19,52 +19,27 @@ The API starts at `http://localhost:8080`. OpenAPI is available at
 `http://localhost:8080/q/openapi` and Swagger UI at
 `http://localhost:8080/q/swagger-ui` while running in dev mode.
 
-## Deploy with Firebase Hosting and Cloud Run
+## Deploy backend to Render
 
-Firebase Hosting serves the static Expo web app. Deploy this Quarkus API to
-Cloud Run in the same Google Cloud project (`fashionlens-da167`); Firebase
-Hosting itself cannot run the Java backend.
+Firebase Hosting serves the static Expo web app; it does not run the Quarkus
+API. This repository includes a Render Blueprint and Dockerfile for deploying
+the API as a Render web service.
 
-1. Install the Google Cloud CLI, sign in with an account that can deploy to
-   the Firebase project's linked Google Cloud project, and select the project:
+1. Sign in to Render and create a **New → Blueprint** from this repository's
+   `main` branch.
+2. Review the `fashion-lens-api` service and enter `SERPAPI_KEY` when prompted.
+   Keep this key in Render's environment settings; do not commit it to Git or
+   put it in the frontend.
+3. Wait for the service deployment to finish, then check
+   `https://<your-render-service>.onrender.com/api/health`.
+4. Put the service's HTTPS base URL in the frontend `.env.local` as
+   `EXPO_PUBLIC_API_BASE_URL` (without `/api`), then rebuild and deploy the
+   frontend to Firebase Hosting.
 
-   ```powershell
-   gcloud auth login
-   gcloud config set project fashionlens-da167
-   gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com secretmanager.googleapis.com
-   ```
-
-2. In Google Cloud Console, open **Security → Secret Manager** and create a
-   secret named `serpapi-key` containing your SerpApi key. Do not commit the
-   key to Git or put it in the frontend.
-3. From this backend repository, deploy the service:
-
-   ```powershell
-   gcloud run deploy fashion-lens-api `
-     --source . `
-     --region us-central1 `
-     --allow-unauthenticated `
-     --port 8080 `
-     --set-env-vars "FASHION_LENS_CORS_ORIGINS=https://fashionlens-da167.web.app" `
-     --set-secrets "SERPAPI_KEY=serpapi-key:latest"
-   ```
-
-   The deploy command uses this repository's `Dockerfile`. When prompted,
-   enable any additional required Google Cloud APIs and grant the Cloud Run
-   service identity permission to access the `serpapi-key` secret.
-4. Copy the HTTPS service URL printed by the deployment. Set
-   `EXPO_PUBLIC_API_BASE_URL` in the frontend's `.env.local` to that URL,
-   without a trailing `/api`.
-5. In the frontend repository, build and deploy the web app to Firebase Hosting:
-
-   ```powershell
-   npx expo export --platform web
-   npx firebase-tools deploy --only hosting --project fashionlens-da167
-   ```
-
-6. Confirm `https://<cloud-run-service-url>/api/health` responds and that the
-   Firebase Hosting domain is listed in Firebase Authentication's authorized
-   domains.
+The Blueprint configures CORS to allow `https://fashionlens-da167.web.app`.
+Free Render web services can sleep when idle and may take about a minute to
+wake on the first request. Check Render's current free-service limitations
+before relying on it for production.
 Without provider credentials, the API returns clearly labelled sample products.
 To enable SerpApi search for local development, create `.env` in this directory
 using `.env.example` as a template, then replace the placeholder with your key:
